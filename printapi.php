@@ -27,8 +27,8 @@ final class PrintApi
      * https://portal.printapi.nl/test/account/register
      *
      * @param string $clientId    The client ID assigned to your application.
-     * @param array  $secret      The secret assigned to your application.
-     * @param array  $environment One of "test" or "live".
+     * @param string $secret      The secret assigned to your application.
+     * @param string $environment One of "test" or "live".
      *
      * @return PrintApi An authenticated Print API client.
      *
@@ -75,7 +75,11 @@ final class PrintApi
     // ==============
 
     /**
+     * @param string $environment One of "test" or "live".
+     *
      * @return string The base URI of the specified Print API environment.
+     *
+     * @throws PrintApiException
      */
     static private function _getbaseUri($environment)
     {
@@ -92,6 +96,9 @@ final class PrintApi
     }
 
     /**
+     * @param string $clientId    The client ID assigned to your application.
+     * @param string $secret      The secret assigned to your application.
+     *
      * @return string The parameters for the Print API OAuth token endpoint.
      */
     static private function _formatOAuthParameters($clientId, $secret)
@@ -103,6 +110,8 @@ final class PrintApi
 
     /**
      * Sets common cURL options, like timeout length.
+     *
+     * @param resource $ch cURL handle
      */
     static private function _setDefaultCurlOpts($ch)
     {
@@ -115,6 +124,9 @@ final class PrintApi
     }
 
     /**
+     * @param resource $ch     cURL handle
+     * @param mixed    $result
+     *
      * @throws PrintApiException         If the cURL request failed.
      * @throws PrintApiResponseException If the API returned an error report.
      */
@@ -146,6 +158,9 @@ final class PrintApi
     private $token;
 
     /**
+     * @param string $baseUri The base URI of the environment
+     * @param string $token   Access token
+     *
      * Call {@link authenticate()} to obtain an instance of this class.
      */
     private function __construct($baseUri, $token)
@@ -214,6 +229,9 @@ final class PrintApi
     // ===============
 
     /**
+     * @param string $uri        The destination URI. Can be absolute or relative.
+     * @param array  $parameters Array of GET parameters
+     *
      * @return string A fully qualified API URI.
      */
     private function _constructApiUri($uri, $parameters = array())
@@ -232,7 +250,15 @@ final class PrintApi
     }
 
     /**
+     * @param string      $method      Custom HTTP verb
+     * @param string      $uri         The destination URI
+     * @param mixed       $content
+     * @param null|string $contentType
+     *
      * @return object The decoded API response.
+     *
+     * @throws PrintApiException
+     * @throws PrintApiResponseException
      */
     private function _request($method, $uri, $content = null, $contentType = null)
     {
