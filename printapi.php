@@ -8,16 +8,16 @@
  * products, like hardcover books, softcover books, wood or aluminium prints and much more.
  *
  * Read more at: https://www.printapi.nl/services/rest-api
- * 
+ *
  * @package Print API
- * @version 1.0.2
+ * @version 1.1.0
  * @copyright 2016 Print API
  */
 final class PrintApi
 {
     const LIVE_BASE_URI = 'https://live.printapi.nl/v1/';
     const TEST_BASE_URI = 'https://test.printapi.nl/v1/';
-    const USER_AGENT = 'Print API PHP Client v1.0.2';
+    const USER_AGENT = 'Print API PHP Client v1.1.0';
 
     /**
      * Call this to obtain an authenticated Print API client.
@@ -38,7 +38,7 @@ final class PrintApi
     {
         // Construct OAuth 2.0 token endpoint URL:
 
-        $baseUri = self::_getbaseUri($environment);
+        $baseUri = self::_getBaseUri($environment);
         $oAuthUri = $baseUri . 'oauth';
 
         // Create cURL handle:
@@ -82,17 +82,15 @@ final class PrintApi
      *
      * @throws PrintApiException If the environment is unknown.
      */
-    static private function _getbaseUri($environment)
+    static private function _getBaseUri($environment)
     {
-        if ($environment !== 'test' && $environment !== 'live') {
-            throw new PrintApiException('Unknown environment: '. $environment
-                . '. Must be one of "test" or "live".');
-        }
-
         if ($environment == 'test') {
             return self::TEST_BASE_URI;
         } else if ($environment === 'live') {
             return self::LIVE_BASE_URI;
+        } else {
+            throw new PrintApiException('Unknown environment: '. $environment . '. Must be one of '
+                . '"test" or "live".');
         }
     }
 
@@ -112,7 +110,7 @@ final class PrintApi
     }
 
     /**
-     * Sets common cURL options, like timeout length.
+     * Sets common cURL options.
      *
      * @param resource $ch The cURL handle.
      */
@@ -120,10 +118,10 @@ final class PrintApi
     {
         curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true); 
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60); // note: _request(...) overrides this
     }
 
     /**
@@ -159,8 +157,9 @@ final class PrintApi
     // Instance members
     // ================
 
-    private $baseUri;
-    private $token;
+    /** @var string */ private $baseUri;
+    /** @var string */ private $token;
+    /** @var int */ private $timeout = 90;
 
     /**
      * Private constructor, call {@link authenticate()} to obtain an instance of this class.
@@ -229,6 +228,32 @@ final class PrintApi
         return $this->_request('POST', $uri, $content, $mediaType);
     }
 
+    /**
+     * Gets the request timeout in seconds. 0 if timeout is disabled.
+     *
+     * @return int The request timeout in seconds.
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * Sets the request timeout in seconds. Specify 0 to disable timeout.
+     *
+     * @param int $timeout The request timeout in seconds.
+     *
+     * @throws PrintApiException If the specified timeout is not an integer.
+     */
+    public function setTimeout($timeout)
+    {
+        if (!is_integer($timeout)) {
+            throw new PrintApiException('Argument $timeout must be an integer.');
+        }
+
+        $this->timeout = $timeout;
+    }
+
     // ===============
     // Private helpers
     // ===============
@@ -276,6 +301,7 @@ final class PrintApi
         $ch = curl_init($uri);
         self::_setDefaultCurlOpts($ch);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         // Set HTTP headers:
 
