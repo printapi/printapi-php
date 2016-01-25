@@ -3,13 +3,12 @@
 /**
  * A simple Print API REST client.
  *
- * This utility makes it simple to communicate with {@link https://www.printapi.nl Print API}, a
- * powerful and secure API that lets you print and ship your PDF or image files as a wide range of
- * products, like hardcover books, softcover books, canvases, posters, wood prints and many more.
+ * This small utility simplifies using our REST API from PHP. Print API offers a flexible and
+ * secure REST API that lets you print and ship your PDF or image files as a wide range of
+ * products, like hardcover books, softcover books, wood or aluminium prints and much more.
  *
- * Docs: https://portal.printapi.nl/test/docs
+ * Read more at: https://www.printapi.nl/services/rest-api
  * 
- *
  * @package Print API
  * @version 1.0.2
  * @copyright 2016 Print API
@@ -75,11 +74,13 @@ final class PrintApi
     // ==============
 
     /**
+     * Returns the base URI of the specified Print API environment.
+     *
      * @param string $environment One of "test" or "live".
      *
      * @return string The base URI of the specified Print API environment.
      *
-     * @throws PrintApiException
+     * @throws PrintApiException If the environment is unknown.
      */
     static private function _getbaseUri($environment)
     {
@@ -96,10 +97,12 @@ final class PrintApi
     }
 
     /**
-     * @param string $clientId    The client ID assigned to your application.
-     * @param string $secret      The secret assigned to your application.
+     * Returns formatted parameters for the OAuth token endpoint.
      *
-     * @return string The parameters for the Print API OAuth token endpoint.
+     * @param string $clientId    The client ID credential.
+     * @param string $secret      The client secret credential.
+     *
+     * @return string Formatted parameters for the Print API OAuth token endpoint.
      */
     static private function _formatOAuthParameters($clientId, $secret)
     {
@@ -111,7 +114,7 @@ final class PrintApi
     /**
      * Sets common cURL options, like timeout length.
      *
-     * @param resource $ch cURL handle
+     * @param resource $ch The cURL handle.
      */
     static private function _setDefaultCurlOpts($ch)
     {
@@ -124,8 +127,10 @@ final class PrintApi
     }
 
     /**
-     * @param resource $ch     cURL handle
-     * @param mixed    $result
+     * Throws an exception if the specified cURL request failed.
+     *
+     * @param resource $ch     The cURL handle.
+     * @param mixed    $result The result of curl_exec().
      *
      * @throws PrintApiException         If the cURL request failed.
      * @throws PrintApiResponseException If the API returned an error report.
@@ -158,10 +163,10 @@ final class PrintApi
     private $token;
 
     /**
-     * @param string $baseUri The base URI of the environment
-     * @param string $token   Access token
+     * Private constructor, call {@link authenticate()} to obtain an instance of this class.
      *
-     * Call {@link authenticate()} to obtain an instance of this class.
+     * @param string $baseUri The base URI of the Print API environment.
+     * @param string $token   An OAuth access token.
      */
     private function __construct($baseUri, $token)
     {
@@ -229,8 +234,10 @@ final class PrintApi
     // ===============
 
     /**
+     * Generates a fully qualified URI for the API.
+     *
      * @param string $uri        The destination URI. Can be absolute or relative.
-     * @param array  $parameters Array of GET parameters
+     * @param array  $parameters The query parameters as an associative array.
      *
      * @return string A fully qualified API URI.
      */
@@ -250,15 +257,17 @@ final class PrintApi
     }
 
     /**
-     * @param string      $method      Custom HTTP verb
-     * @param string      $uri         The destination URI
-     * @param mixed       $content
-     * @param null|string $contentType
+     * Sends a custom HTTP request to the API.
+     *
+     * @param string      $method      The HTTP verb to use for the request.
+     * @param string      $uri         The destination URI (absolute).
+     * @param mixed       $content     The request body, e.g. a JSON string.
+     * @param null|string $contentType The Content-Type HTTP header value.
      *
      * @return object The decoded API response.
      *
-     * @throws PrintApiException
-     * @throws PrintApiResponseException
+     * @throws PrintApiException         If the HTTP request fails altogether.
+     * @throws PrintApiResponseException If the API response indicates an error.
      */
     private function _request($method, $uri, $content = null, $contentType = null)
     {
