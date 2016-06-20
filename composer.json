@@ -1,0 +1,19 @@
+{
+    "name": "printapi/printapi-php",
+    "type": "library",
+    "description": "A library for using our web-to-print API from PHP.",
+    "keywords": ["print", "print api", "print on demand", "print-on-demand", "web to print", "web-to-print"],
+    "homepage": "https://github.com/printapi/printapi-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Print API",
+            "email": "info@printapi.nl",
+            "homepage": "https://www.printapi.nl",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.17"
+    }
+}
