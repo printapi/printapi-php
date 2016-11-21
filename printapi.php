@@ -10,7 +10,7 @@
  * Read more at: https://www.printapi.nl/services/rest-api
  *
  * @package Print API
- * @version 1.1.0
+ * @version 1.1.1
  * @copyright 2016 Print API
  */
 final class PrintApi
@@ -87,9 +87,11 @@ final class PrintApi
         if ($environment === 'test') {
             return self::TEST_BASE_URI;
         }
+        
         if ($environment === 'live') {
             return self::LIVE_BASE_URI;
         }
+        
         throw new PrintApiException('Unknown environment: '. $environment . '. Must be one of '
                 . '"test" or "live".');
     }
