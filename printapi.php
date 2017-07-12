@@ -10,14 +10,14 @@
  * Read more at: https://www.printapi.nl/services/rest-api
  *
  * @package Print API
- * @version 1.1.1
- * @copyright 2016 Print API
+ * @version 2.0.0
+ * @copyright 2017 Print API
  */
 final class PrintApi
 {
-    const LIVE_BASE_URI = 'https://live.printapi.nl/v1/';
-    const TEST_BASE_URI = 'https://test.printapi.nl/v1/';
-    const USER_AGENT = 'Print API PHP Client v1.1.0';
+    const LIVE_BASE_URI = 'https://live.printapi.nl/v2/';
+    const TEST_BASE_URI = 'https://test.printapi.nl/v2/';
+    const USER_AGENT = 'Print API PHP Client v2.0.0';
 
     /**
      * Call this to obtain an authenticated Print API client.
@@ -87,11 +87,11 @@ final class PrintApi
         if ($environment === 'test') {
             return self::TEST_BASE_URI;
         }
-        
+
         if ($environment === 'live') {
             return self::LIVE_BASE_URI;
         }
-        
+
         throw new PrintApiException('Unknown environment: '. $environment . '. Must be one of '
                 . '"test" or "live".');
     }
