@@ -1,5 +1,5 @@
 {
-    "name": "printapi/printapi-php",
+    "name": "koenpasman/printapi-php",
     "type": "library",
     "description": "A library for using our web-to-print API from PHP.",
     "keywords": ["print", "print api", "print on demand", "print-on-demand", "web to print", "web-to-print"],
@@ -13,6 +13,9 @@
             "role": "Developer"
         }
     ],
+    "autoload": {
+        "psr-4": {"PrintApi\\": "src"}
+    },
     "require": {
         "php": ">=5.2.17"
     }
