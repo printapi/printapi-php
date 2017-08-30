@@ -15,7 +15,7 @@ use PrintApi\Exception\PrintApiResponseException;
  * Read more at: https://www.printapi.nl/services/rest-api
  *
  * @package Print API
- * @version 2.0.0
+ * @version 3.0.0
  * @copyright 2017 Print API
  */
 final class Client
