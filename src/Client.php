@@ -22,7 +22,7 @@ final class Client
 {
     const LIVE_BASE_URI = 'https://live.printapi.nl/v2/';
     const TEST_BASE_URI = 'https://test.printapi.nl/v2/';
-    const USER_AGENT = 'Print API PHP Client v2.0.0';
+    const USER_AGENT = 'Print API PHP Client v3.0.0';
 
     /**
      * Call this to obtain an authenticated Print API client.
