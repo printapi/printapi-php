@@ -1,5 +1,10 @@
 <?php
 
+namespace PrintApi;
+
+use PrintApi\Exception\PrintApiException;
+use PrintApi\Exception\PrintApiResponseException;
+
 /**
  * A simple Print API REST client.
  *
@@ -10,14 +15,14 @@
  * Read more at: https://www.printapi.nl/services/rest-api
  *
  * @package Print API
- * @version 2.0.0
+ * @version 3.0.0
  * @copyright 2017 Print API
  */
-final class PrintApi
+final class Client
 {
     const LIVE_BASE_URI = 'https://live.printapi.nl/v2/';
     const TEST_BASE_URI = 'https://test.printapi.nl/v2/';
-    const USER_AGENT = 'Print API PHP Client v2.0.0';
+    const USER_AGENT = 'Print API PHP Client v3.0.0';
 
     /**
      * Call this to obtain an authenticated Print API client.
@@ -29,10 +34,10 @@ final class PrintApi
      * @param string $secret      The secret assigned to your application.
      * @param string $environment One of "test" or "live".
      *
-     * @return PrintApi An authenticated Print API client.
+     * @return Client An authenticated Print API client.
      *
-     * @throws PrintApiException         If the HTTP request fails altogether.
-     * @throws PrintApiResponseException If the API response indicates an error.
+     * @throws \PrintApi\Exception\PrintApiException         If the HTTP request fails altogether.
+     * @throws \PrintApi\Exception\PrintApiResponseException If the API response indicates an error.
      */
     static public function authenticate($clientId, $secret, $environment = 'test')
     {
@@ -66,7 +71,7 @@ final class PrintApi
         curl_close($ch);
 
         $token = json_decode($result)->access_token;
-        return new PrintApi($baseUri, $token);
+        return new Client($baseUri, $token);
     }
 
     // ==============
@@ -80,7 +85,7 @@ final class PrintApi
      *
      * @return string The base URI of the specified Print API environment.
      *
-     * @throws PrintApiException If the environment is unknown.
+     * @throws \PrintApi\Exception\PrintApiException If the environment is unknown.
      */
     static private function _getBaseUri($environment)
     {
@@ -132,8 +137,8 @@ final class PrintApi
      * @param resource $ch     The cURL handle.
      * @param mixed    $result The result of curl_exec().
      *
-     * @throws PrintApiException         If the cURL request failed.
-     * @throws PrintApiResponseException If the API returned an error report.
+     * @throws \PrintApi\Exception\PrintApiException         If the cURL request failed.
+     * @throws \PrintApi\Exception\PrintApiResponseException If the API returned an error report.
      */
     static private function _throwExceptionForFailure($ch, $result)
     {
@@ -184,8 +189,8 @@ final class PrintApi
      *
      * @return object The decoded API response.
      *
-     * @throws PrintApiException         If the HTTP request fails altogether.
-     * @throws PrintApiResponseException If the API response indicates an error.
+     * @throws \PrintApi\Exception\PrintApiException         If the HTTP request fails altogether.
+     * @throws \PrintApi\Exception\PrintApiResponseException If the API response indicates an error.
      */
     public function post($uri, $content, $parameters = array())
     {
@@ -202,8 +207,8 @@ final class PrintApi
      *
      * @return object The decoded API response.
      *
-     * @throws PrintApiException         If the HTTP request fails altogether.
-     * @throws PrintApiResponseException If the API response indicates an error.
+     * @throws \PrintApi\Exception\PrintApiException         If the HTTP request fails altogether.
+     * @throws \PrintApi\Exception\PrintApiResponseException If the API response indicates an error.
      */
     public function get($uri, $parameters = array())
     {
@@ -245,7 +250,7 @@ final class PrintApi
      *
      * @param int $timeout The request timeout in seconds.
      *
-     * @throws PrintApiException If the specified timeout is not an integer.
+     * @throws \PrintApi\Exception\PrintApiException If the specified timeout is not an integer.
      */
     public function setTimeout($timeout)
     {
@@ -293,8 +298,8 @@ final class PrintApi
      *
      * @return object The decoded API response.
      *
-     * @throws PrintApiException         If the HTTP request fails altogether.
-     * @throws PrintApiResponseException If the API response indicates an error.
+     * @throws \PrintApi\Exception\PrintApiException         If the HTTP request fails altogether.
+     * @throws \PrintApi\Exception\PrintApiResponseException If the API response indicates an error.
      */
     private function _request($method, $uri, $content = null, $contentType = null)
     {
@@ -332,15 +337,3 @@ final class PrintApi
         return json_decode($result);
     }
 }
-
-/**
- * Generic exception thrown by the Print API client.
- */
-class PrintApiException extends Exception
-{ }
-
-/**
- * Exception thrown by the Print API client for failed API calls.
- */
-class PrintApiResponseException extends PrintApiException
-{ }

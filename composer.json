@@ -13,7 +13,10 @@
             "role": "Developer"
         }
     ],
+    "autoload": {
+        "psr-4": {"PrintApi\\": "src"}
+    },
     "require": {
-        "php": ">=5.2.17"
+        "php": ">=5.3.7"
     }
 }
