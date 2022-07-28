@@ -18,7 +18,7 @@ use PrintApi\Exception\PrintApiResponseException;
  * @version 3.0.0
  * @copyright 2017 Print API
  */
-final class Client
+class Client
 {
     const LIVE_BASE_URI = 'https://live.printapi.nl/v2/';
     const TEST_BASE_URI = 'https://test.printapi.nl/v2/';
@@ -30,8 +30,8 @@ final class Client
      * The client ID and secret can be obtained by creating a free Print API account at:
      * https://portal.printapi.nl/test/account/register
      *
-     * @param string $clientId    The client ID assigned to your application.
-     * @param string $secret      The secret assigned to your application.
+     * @param string $clientId The client ID assigned to your application.
+     * @param string $secret The secret assigned to your application.
      * @param string $environment One of "test" or "live".
      *
      * @return Client An authenticated Print API client.
@@ -97,15 +97,15 @@ final class Client
             return self::LIVE_BASE_URI;
         }
 
-        throw new PrintApiException('Unknown environment: '. $environment . '. Must be one of '
-                . '"test" or "live".');
+        throw new PrintApiException('Unknown environment: ' . $environment . '. Must be one of '
+            . '"test" or "live".');
     }
 
     /**
      * Returns formatted parameters for the OAuth token endpoint.
      *
-     * @param string $clientId    The client ID credential.
-     * @param string $secret      The client secret credential.
+     * @param string $clientId The client ID credential.
+     * @param string $secret The client secret credential.
      *
      * @return string Formatted parameters for the Print API OAuth token endpoint.
      */
@@ -134,8 +134,8 @@ final class Client
     /**
      * Throws an exception if the specified cURL request failed.
      *
-     * @param resource $ch     The cURL handle.
-     * @param mixed    $result The result of curl_exec().
+     * @param resource $ch The cURL handle.
+     * @param mixed $result The result of curl_exec().
      *
      * @throws \PrintApi\Exception\PrintApiException         If the cURL request failed.
      * @throws \PrintApi\Exception\PrintApiResponseException If the API returned an error report.
@@ -164,28 +164,27 @@ final class Client
     // Instance members
     // ================
 
-    /** @var string */ private $baseUri;
-    /** @var string */ private $token;
-    /** @var int */ private $timeout = 90;
+    /** @var string */
+    private $baseUri;
+    /** @var string */
+    private $token;
+    /** @var int */
+    private $timeout = 90;
 
     /**
      * Private constructor, call {@link authenticate()} to obtain an instance of this class.
-     *
-     * @param string $baseUri The base URI of the Print API environment.
-     * @param string $token   An OAuth access token.
      */
-    private function __construct($baseUri, $token)
+    private function __construct($baseUri = null, $token = null)
     {
-        $this->baseUri = $baseUri;
-        $this->token = $token;
+        // Kept the vars for backwards compatibility
     }
 
     /**
      * Sends an HTTP POST request to Print API.
      *
-     * @param string $uri        The destination URI. Can be absolute or relative.
-     * @param array  $content    The request body as an associative array.
-     * @param array  $parameters The query parameters as an associative array.
+     * @param string $uri The destination URI. Can be absolute or relative.
+     * @param array $content The request body as an associative array.
+     * @param array $parameters The query parameters as an associative array.
      *
      * @return object The decoded API response.
      *
@@ -202,8 +201,8 @@ final class Client
     /**
      * Sends an HTTP GET request to Print API.
      *
-     * @param string $uri        The destination URI. Can be absolute or relative.
-     * @param array  $parameters The query parameters as an associative array.
+     * @param string $uri The destination URI. Can be absolute or relative.
+     * @param array $parameters The query parameters as an associative array.
      *
      * @return object The decoded API response.
      *
@@ -219,8 +218,8 @@ final class Client
     /**
      * Uploads a file to Print API.
      *
-     * @param string $uri       The destination URI. Can be absolute or relative.
-     * @param string $fileName  The name of the file to upload.
+     * @param string $uri The destination URI. Can be absolute or relative.
+     * @param string $fileName The name of the file to upload.
      * @param string $mediaType One of "application/pdf", "image/jpeg" or "image/png".
      *
      * @return object The decoded API response.
@@ -268,8 +267,8 @@ final class Client
     /**
      * Generates a fully qualified URI for the API.
      *
-     * @param string $uri        The destination URI. Can be absolute or relative.
-     * @param array  $parameters The query parameters as an associative array.
+     * @param string $uri The destination URI. Can be absolute or relative.
+     * @param array $parameters The query parameters as an associative array.
      *
      * @return string A fully qualified API URI.
      */
@@ -291,9 +290,9 @@ final class Client
     /**
      * Sends a custom HTTP request to the API.
      *
-     * @param string      $method      The HTTP verb to use for the request.
-     * @param string      $uri         The destination URI (absolute).
-     * @param mixed       $content     The request body, e.g. a JSON string.
+     * @param string $method The HTTP verb to use for the request.
+     * @param string $uri The destination URI (absolute).
+     * @param mixed $content The request body, e.g. a JSON string.
      * @param null|string $contentType The Content-Type HTTP header value.
      *
      * @return object The decoded API response.
